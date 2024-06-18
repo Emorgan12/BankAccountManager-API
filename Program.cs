@@ -1,14 +1,24 @@
+using System;
+using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
 using BankAccountManager;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MongoDbSettings;
+using Serilog;
+using Serilog.Configuration;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -135,6 +145,7 @@ app.Run();
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+                
 
     }
 
