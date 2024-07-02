@@ -133,5 +133,19 @@ public class program{
                 });
 }
 
+public class validation{
+    public static bool ContainsNumber(string str)
+    {
+        foreach(char c in str)
+        {
+            if (char.IsDigit(c))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 
 

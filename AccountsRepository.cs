@@ -6,11 +6,11 @@ namespace BankAccountManager
 {
     public interface AccountsRepository
     {
-        Task<Account> GetItemAsync(Guid id);
+        Task<Account> GetItemAsync(string username, string password);
         Task<IEnumerable<Account>> GetItemsAsync();
         Task CreateItemAsync(Account account);
-        Task UpdateItemAsync(Account account);
-        Task DeleteItemAsync(Guid id);
-        Task<AccountDto> LoginAsync(string username, string password);
+        Task UpdateItemAsync(string Username, string Password, Account account);
+        Task DeleteItemAsync(string username, string password);
+        Task<AccountDto> GetItemAsyncNoPass(string recipientUsername);
     }
 }
