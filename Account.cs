@@ -8,5 +8,6 @@ namespace BankAccountManager
         public string Password {get; set; }
         public int Balance {get; set; }
         public DateTimeOffset DateCreated {get; set; }
+
     }
 }

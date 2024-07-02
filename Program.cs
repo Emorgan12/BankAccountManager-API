@@ -19,26 +19,8 @@ using MongoDbSettings;
 using Serilog;
 using Serilog.Configuration;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.Run();
 
  public class Startup
     {
@@ -70,7 +52,7 @@ app.Run();
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Account", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BankAccountManager-API", Version = "v1" });
             });
 
             services.AddHealthChecks()
@@ -88,7 +70,7 @@ app.Run();
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c =>{c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");});
+                app.UseSwaggerUI(c =>{c.SwaggerEndpoint("/swagger/v1/swagger.json", "BankAccountManager-API v1");});
             }
 
             if (env.IsDevelopment())
@@ -134,7 +116,11 @@ app.Run();
                 });
             });
         }
-        public static void Main(string[] args)
+                
+
+    }
+public class program{
+    public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
         }
@@ -145,8 +131,7 @@ app.Run();
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-                
+}
 
-    }
 
 

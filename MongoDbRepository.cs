@@ -18,19 +18,22 @@ namespace BankAccountManager{
         private readonly IMongoCollection<Account> accountsCollection;
         private readonly FilterDefinitionBuilder<Account> filterBuilder = Builders<Account>.Filter;
 
-        public Task<Account> GetItemAsync(Guid id)
+        public async Task<Account> GetItemAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(item => item.Id, id);
+            return await accountsCollection.Find(filter).SingleOrDefaultAsync();
         }
 
-        public Task<IEnumerable<Account>> GetItemsAsync()
+        public async Task<AccountDto> LoginAsync(string Username, string Password)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(item => item.Password, Password) & filterBuilder.Eq(item => item.Username, Username);
+            var Currentaccount = await accountsCollection.Find(filter).SingleOrDefaultAsync();
+            return Currentaccount.AsDto();
         }
 
-        public Task CreateItemAsync(Account account)
+        public async Task CreateItemAsync(Account account)
         {
-            throw new NotImplementedException();
+            await accountsCollection.InsertOneAsync(account);
         }
 
         public Task UpdateItemAsync(Account account)
@@ -38,9 +41,15 @@ namespace BankAccountManager{
             throw new NotImplementedException();
         }
 
-        public Task DeleteItemAsync(Guid id)
+        public async Task DeleteItemAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(item => item.Id, id);
+            await accountsCollection.DeleteOneAsync(filter);
+        }
+
+        public async Task<IEnumerable<Account>> GetItemsAsync()
+        {
+            return await accountsCollection.Find(new BsonDocument()).ToListAsync();
         }
     }
 }

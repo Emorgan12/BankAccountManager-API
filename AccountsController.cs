@@ -19,20 +19,12 @@ namespace BankAccountManager{
             this.logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<AccountDto>> GetItemsAsync(string Username = "")
+        [HttpGet ("{Username}, {Password}")]
+        public async Task<AccountDto> Login(string Username = null, string Password = null)
         {
-            var accounts = (await repository.GetItemsAsync())
-                        .Select(account => account.AsDto());
+            var accounts = await repository.LoginAsync(Username, Password);
     
-    
-
-            if (!string.IsNullOrWhiteSpace(Username))
-            {
-                accounts = accounts.Where(account => account.Username.Contains(Username, StringComparison.OrdinalIgnoreCase));
-            }
-    
-            logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrieved {accounts.Count()} accounts");
+            logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: Hello {Username}! You have successfully logged in! Your account balance is {accounts.balance}!");
             return accounts;
         }
     
@@ -49,7 +41,33 @@ namespace BankAccountManager{
     
             await repository.CreateItemAsync(account);
     
-            return CreatedAtAction(nameof(GetItemsAsync), new { id = account.Id }, account.AsDto());
+            return CreatedAtAction(nameof(repository.GetItemsAsync), new { id = account.Id }, account.AsDto());
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteItemAsync(Guid id)
+        {
+            var existingAccount = await repository.GetItemAsync(id);
+
+            if (existingAccount is null)
+            {
+                return NotFound();
+            }
+
+            logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: Deleting account with username {existingAccount.Username} and id {id}");
+            await repository.DeleteItemAsync(id);
+
+
+            return NoContent();
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<AccountDto>> GetItemsAsync()
+        {
+            var accounts = (await repository.GetItemsAsync())
+                            .Select(account => account.AsDto());
+            return accounts;
+        }
+
     }
 }

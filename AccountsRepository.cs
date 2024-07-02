@@ -11,5 +11,6 @@ namespace BankAccountManager
         Task CreateItemAsync(Account account);
         Task UpdateItemAsync(Account account);
         Task DeleteItemAsync(Guid id);
+        Task<AccountDto> LoginAsync(string username, string password);
     }
 }

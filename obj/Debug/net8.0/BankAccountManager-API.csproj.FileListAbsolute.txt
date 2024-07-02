@@ -54,3 +54,7 @@
 /workspaces/BankAccountManager-API/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /workspaces/BankAccountManager-API/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /workspaces/BankAccountManager-API/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+/workspaces/BankAccountManager-API/bin/Debug/net8.0/Serilog.dll
+/workspaces/BankAccountManager-API/bin/Debug/net8.0/Serilog.Extensions.Hosting.dll
+/workspaces/BankAccountManager-API/bin/Debug/net8.0/Serilog.Extensions.Logging.dll
+/workspaces/BankAccountManager-API/bin/Debug/net8.0/Serilog.Sinks.File.dll
