@@ -29,31 +29,22 @@ namespace BankAccountManager{
             return accounts.AsDto();
         }
     
-        [HttpPost ("{Username}, {Password}")]
-        public async Task<ActionResult<AccountDto>> CreateAccountAsync(string Username, string Password)
+        [HttpPost]
+        public async Task<ActionResult<AccountDto>> CreateAccountAsync(CreateAccountDto accountDto)
         {
-            bool num;
-            if(GetItemsAsync().Result.Any(account => account.Username == Username))
+
+            if(GetItemsAsync().Result.Any(account => account.Username == accountDto.Username))
             {
                 return BadRequest("Username already exists");
             }
-            foreach (char c in Password)
-            {
-                for(int i = 0; i < 10; i++)
-                {
-                    if (c == i.ToString()[0])
-                    {
-                        num = true;
-                    }
-                }
-            }
-            if(!validation.ContainsNumber(Password))
+
+            if(!validation.ContainsNumber(accountDto.Password))
                 return BadRequest("Password must contain at least one number");
             Account account = new()
             {
                 Id = Guid.NewGuid(),
-                Username = Username,
-                Password = Password,
+                Username = accountDto.Username,
+                Password = accountDto.Password,
                 CreatedDate = DateTimeOffset.UtcNow
             };
     
