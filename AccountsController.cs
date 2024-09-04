@@ -6,7 +6,8 @@ using Amazon.SecurityToken.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace BankAccountManager{
+namespace BankAccountManager
+{
     [ApiController]
     [Route("accounts")]
     public class AccountsController : ControllerBase
@@ -20,25 +21,25 @@ namespace BankAccountManager{
             this.logger = logger;
         }
 
-        [HttpGet ("{Username}, {Password}")]
+        [HttpGet("{Username} {Password}")]
         public async Task<AccountDto> Login(string Username = null, string Password = null)
         {
             var accounts = await repository.GetItemAsync(Username, Password);
-        
+
             logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: Hello {Username}! You have successfully logged in! Your account balance is {accounts.Balance}!");
             return accounts.AsDto();
         }
-    
+
         [HttpPost]
         public async Task<ActionResult<AccountDto>> CreateAccountAsync(CreateAccountDto accountDto)
         {
 
-            if(GetItemsAsync().Result.Any(account => account.Username == accountDto.Username))
+            if (GetItemsAsync().Result.Any(account => account.Username == accountDto.Username))
             {
                 return BadRequest("Username already exists");
             }
 
-            if(!validation.ContainsNumber(accountDto.Password))
+            if (!validation.ContainsNumber(accountDto.Password))
                 return BadRequest("Password must contain at least one number");
             Account account = new()
             {
@@ -47,9 +48,9 @@ namespace BankAccountManager{
                 Password = accountDto.Password,
                 CreatedDate = DateTimeOffset.UtcNow
             };
-    
+
             await repository.CreateItemAsync(account);
-    
+
             return CreatedAtAction(nameof(repository.GetItemsAsync), new { id = account.Id }, account.AsDto());
         }
 
@@ -69,6 +70,14 @@ namespace BankAccountManager{
             return NoContent();
         }
 
+        [HttpGet("{Username}/findUser")]
+        public async Task<AccountDto> FindUser(string Username)
+        {
+            var accounts = await repository.GetItemAsyncNoPass(Username);
+
+            logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: Found {Username}");
+            return accounts;
+        }
         [HttpGet]
         public async Task<IEnumerable<Account>> GetItemsAsync()
         {
@@ -141,7 +150,7 @@ namespace BankAccountManager{
         }
 
         [HttpPut("{Username}, {Password}, {TransferAmount}, {RecipientUsername}/transfer")]
-        
+
         public async Task<ActionResult<AccountDto>> TransferMoney(string Username, string Password, int TransferAmount, string RecipientUsername)
         {
             var existingAccount = await repository.GetItemAsync(Username, Password);
@@ -191,7 +200,7 @@ namespace BankAccountManager{
             logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: {TransferAmount} has been transferred from {Username} to {RecipientUsername}");
             logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: {Username} has a balance of {updatedAccount.Balance}");
             logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: {RecipientUsername} has a balance of {updatedRecipientAccount.Balance}");
-                 
+
             return updatedAccount.AsDto();
         }
 
