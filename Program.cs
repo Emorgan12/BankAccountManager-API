@@ -66,6 +66,9 @@ using System.Security.Cryptography.X509Certificates;
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,6 +80,13 @@ using System.Security.Cryptography.X509Certificates;
             {
                 app.UseHttpsRedirection();
             }
+
+             app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+            });
 
             app.UseRouting();
 
